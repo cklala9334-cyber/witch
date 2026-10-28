@@ -4,6 +4,8 @@
 
 게임 본체와 에셋은 [`witch-cat-runner`](./witch-cat-runner/) 폴더에 보존되어 있습니다.
 
+두 번째 게임은 [`demon-village-runner`](./demon-village-runner/)에서 실행할 수 있습니다.
+
 ## 조작
 
 - `Space` / `↑` / 화면 탭: 점프
