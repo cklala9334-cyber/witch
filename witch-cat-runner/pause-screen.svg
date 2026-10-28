@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#b7d9f0"/><stop offset="1" stop-color="#f8decf"/></linearGradient></defs>
+  <rect width="960" height="540" fill="url(#sky)"/><circle cx="790" cy="105" r="47" fill="#fff3d9"/>
+  <path d="M0 338Q150 270 300 330T600 318T960 325V427H0Z" fill="#c5b9d5"/>
+  <g fill="#819d91"><path d="M26 300h9v127h-9zm135-18h9v145h-9zm135 17h9v128h-9zm135-14h9v142h-9zm135 17h9v125h-9zm135-18h9v143h-9zm135 16h9v127h-9z"/><circle cx="30" cy="300" r="37"/><circle cx="165" cy="282" r="41"/><circle cx="300" cy="299" r="35"/><circle cx="435" cy="285" r="40"/><circle cx="570" cy="301" r="36"/><circle cx="705" cy="283" r="40"/><circle cx="840" cy="299" r="37"/></g>
+  <rect y="427" width="960" height="113" fill="#dcbca7"/><rect y="427" width="960" height="12" fill="#f3dbc3"/>
+  <rect width="960" height="540" fill="#342744" opacity=".43"/>
+  <svg x="77" y="113" width="350" height="350" viewBox="1280 0 640 640"><image href="assets/sprite-sheet-alpha.png" width="3840" height="640"/></svg>
+  <rect x="445" y="130" width="455" height="275" rx="30" fill="#fffaf1" stroke="#fff" stroke-width="3"/>
+  <text x="672" y="213" text-anchor="middle" font-family="Malgun Gothic, sans-serif" font-size="42" font-weight="700" fill="#4c3855">잠시 쉬어가기</text>
+  <text x="672" y="272" text-anchor="middle" font-family="Malgun Gothic, sans-serif" font-size="23" fill="#4c3855">소녀마법사랑 별빛 달리기</text>
+  <text x="672" y="325" text-anchor="middle" font-family="Malgun Gothic, sans-serif" font-size="23" fill="#4c3855">점수 120 · 모은 별 3개</text>
+</svg>

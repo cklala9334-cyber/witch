@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>소녀마법사랑 별빛 달리기</title>
+  <style>
+    :root{color-scheme:light;--ink:#332845;--pink:#e86d99;--cream:#fff8ee}
+    *{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;background:radial-gradient(circle at 15% 10%,#fff8ed,#e7d8ef 52%,#b7cfdf);font-family:system-ui,"Malgun Gothic",sans-serif;color:var(--ink)}
+    .wrap{width:min(100%,1050px);padding:16px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.title{font-size:clamp(17px,3vw,25px);font-weight:800}.meta{display:flex;gap:10px;font-size:14px;font-weight:700}.pill{background:#fffaf0d9;border:1px solid #ffffff;padding:7px 12px;border-radius:20px;box-shadow:0 3px 12px #765f7830}
+    .stage{position:relative;overflow:hidden;border:4px solid #fff9f6;border-radius:25px;box-shadow:0 18px 50px #57466a48;background:#ddedf4}canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;touch-action:manipulation}
+    .overlay{position:absolute;inset:0;display:grid;place-items:center;background:#34274469;padding:18px;text-align:center}.overlay[hidden]{display:none}.card{width:min(88%,420px);background:#fffaf2ee;border:2px solid #fff;border-radius:24px;padding:24px 22px;box-shadow:0 12px 40px #33284542}.card h1{font-size:clamp(22px,4vw,31px);margin:0 0 10px}.card p{line-height:1.6;margin:8px 0 18px}.btn{appearance:none;border:0;background:linear-gradient(135deg,#db5f93,#9d6ed0);color:white;font-weight:800;font-size:17px;border-radius:17px;padding:12px 24px;cursor:pointer;box-shadow:0 5px 15px #ab649859}.btn:focus-visible,.small:focus-visible{outline:3px solid #513fa3;outline-offset:3px}.small{border:1px solid #f7ecf3;background:#fff9f2d9;color:var(--ink);padding:8px 13px;border-radius:15px;font-weight:700;cursor:pointer}.controls{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px;padding:11px 4px 3px;font-size:14px}.hint{margin-right:auto}.touch{display:none}@media(pointer:coarse){.touch{display:inline-flex}}@media(max-width:600px){.wrap{padding:6px}.top{margin:6px 5px 9px}.title{font-size:16px}.meta{gap:5px;font-size:12px}.pill{padding:6px 8px}.stage{border-width:2px;border-radius:17px}.overlay{position:relative;inset:auto;padding:10px;background:#d8c8d9}.card{width:100%;padding:13px}.card h1{font-size:20px}.card p{font-size:13px;margin:5px 0 10px}.btn{font-size:14px;padding:9px 15px}.controls{padding:9px}.hint{width:100%;font-size:12px}}
+    @media(max-width:600px){.top{flex-wrap:wrap}.title{width:100%}.meta{width:100%;justify-content:flex-end}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top"><div class="title">✦ 소녀마법사랑 별빛 달리기</div><div class="meta"><span class="pill" id="score">점수 0</span><span class="pill" id="best">최고 0</span><span class="pill" id="lives">♥ ♥ ♥</span></div></div>
+    <div class="stage" id="stage">
+      <canvas id="game" width="960" height="540" aria-label="마법사와 버섯고양이가 함께 달리는 게임"></canvas>
+      <div class="overlay" id="overlay"><div class="card"><h1 id="heading">소녀마법사랑<br>별빛 달리기</h1><p id="message">둘이 함께 숲길을 달려요.<br>장애물을 뛰어넘고 반짝이는 별을 모으세요!</p><button class="btn" id="start">게임 시작</button></div></div>
+    </div>
+    <div class="controls"><span class="hint">스페이스·↑·화면 탭: 점프　|　P: 일시정지</span><button class="small" id="scene">게임 장면</button><button class="small" id="still">정지화면</button><button class="small" id="save">화면 PNG 저장</button><button class="small touch" id="jump">점프 ↑</button><button class="small" id="pause">일시정지</button></div>
+  </main>
+  <script>
+  (()=>{
+    const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),overlay=document.getElementById('overlay');
+    const scoreEl=document.getElementById('score'),bestEl=document.getElementById('best'),livesEl=document.getElementById('lives');
+    const sprite=new Image();sprite.src='assets/sprite-sheet-alpha.png';
+    const W=960,H=540,GROUND=427,FRAME=640,FRAME_COUNT=6,FPS=8;
+    const readBest=()=>{try{return Number(localStorage.getItem('witchCatRunnerBest')||0)}catch{return 0}};
+    const saveBest=value=>{try{localStorage.setItem('witchCatRunnerBest',value)}catch{}};
+    let mode='ready',score=0,stars=0,best=readBest(),lives=3,clock=0,travel=0,spawnClock=0,starClock=0,last=0,invincible=0;
+    let jumpY=0,jumpV=0,obstacles=[],pickups=[],particles=[];
+    const random=(a,b)=>a+Math.random()*(b-a);
+    bestEl.textContent='최고 '+best;
+    function hud(){scoreEl.textContent='점수 '+Math.floor(score);livesEl.textContent=Array.from({length:3},(_,i)=>i<lives?'♥':'♡').join(' ');if(score>best){best=Math.floor(score);bestEl.textContent='최고 '+best;saveBest(best)}}
+    function show(title,message,button){document.getElementById('heading').innerHTML=title;document.getElementById('message').innerHTML=message;document.getElementById('start').textContent=button;overlay.hidden=false}
+    function start(){mode='playing';score=stars=clock=travel=spawnClock=starClock=jumpY=jumpV=invincible=0;lives=3;obstacles=[];pickups=[];particles=[];hud();overlay.hidden=true}
+    function togglePause(){if(mode==='playing'||mode==='scene'){mode='paused';show('잠시 쉬어가기','정지한 장면을 PNG로 저장할 수 있어요.<br>계속하기를 누르면 다시 달립니다.','계속하기')}else if(mode==='paused'){mode='playing';overlay.hidden=true}}
+    function showScene(){mode='scene';clock=.28;travel=400;score=120;stars=3;lives=3;jumpY=-35;jumpV=0;obstacles=[{x:690,w:56,h:54,hit:false}];pickups=[{x:520,y:230,got:false},{x:850,y:280,got:false}];particles=[];overlay.hidden=true;hud();draw()}
+    function showStill(){showScene();mode='paused';show('잠시 쉬어가기','두 친구의 달리기 장면이 멈췄습니다.<br>화면 PNG 저장 버튼으로 정지화면을 저장하세요.','계속하기')}
+    function saveScreen(){const output=document.createElement('canvas');output.width=W;output.height=H;const o=output.getContext('2d');o.drawImage(canvas,0,0);o.fillStyle='#fffaf0ee';o.beginPath();o.roundRect(22,18,356,57,20);o.fill();o.fillStyle='#42364d';o.font='bold 25px system-ui';o.fillText('✦ 소녀마법사랑 별빛 달리기',43,54);o.font='bold 21px system-ui';o.fillText('점수 '+Math.floor(score)+'  ·  별 '+stars+'개',704,53);if(mode==='paused'){o.fillStyle='#34274478';o.fillRect(0,0,W,H);o.fillStyle='#fffaf1f5';o.beginPath();o.roundRect(259,142,442,255,27);o.fill();o.fillStyle='#4c3855';o.textAlign='center';o.font='bold 42px system-ui';o.fillText('잠시 쉬어가기',480,223);o.font='23px system-ui';o.fillText('소녀마법사랑 별빛 달리기',480,278);o.fillText('점수 '+Math.floor(score)+'  ·  모은 별 '+stars+'개',480,330)}const link=document.createElement('a');link.download=mode==='paused'?'witch-cat-pause.png':'witch-cat-game-scene.png';link.href=output.toDataURL('image/png');link.click()}
+    function jump(){if(mode==='ready'||mode==='over'){start();return}if(mode==='paused'){togglePause();return}if(jumpY===0){jumpV=-670;jumpY=-1}}
+    function point(e){e.preventDefault();jump()}
+    document.getElementById('start').addEventListener('click',()=>mode==='paused'?togglePause():start());
+    document.getElementById('jump').addEventListener('click',jump);document.getElementById('pause').addEventListener('click',togglePause);document.getElementById('scene').addEventListener('click',showScene);document.getElementById('still').addEventListener('click',showStill);document.getElementById('save').addEventListener('click',saveScreen);
+    canvas.addEventListener('pointerdown',point);
+    window.addEventListener('keydown',e=>{if(['Space','ArrowUp','KeyW'].includes(e.code)){e.preventDefault();if(!e.repeat)jump()}if(e.code==='KeyP'){e.preventDefault();togglePause()}});
+    function sparkle(x,y,count=10){for(let i=0;i<count;i++)particles.push({x,y,vx:random(-120,120),vy:random(-190,-30),life:random(.3,.7),max:.7,r:random(2,5)})}
+    function update(dt){
+      clock+=dt;const speed=300+Math.min(190,score*.25);travel+=speed*dt;score+=dt*13;
+      jumpV+=1750*dt;jumpY=Math.min(0,jumpY+jumpV*dt);if(jumpY===0)jumpV=0;
+      if(invincible>0)invincible-=dt;
+      spawnClock-=dt;if(spawnClock<=0){obstacles.push({x:W+35,w:random(41,58),h:random(38,66),hit:false});spawnClock=random(1.45,2.2)*(310/speed)}
+      starClock-=dt;if(starClock<=0){pickups.push({x:W+35,y:random(205,295),got:false});starClock=random(.8,1.35)}
+      for(const o of obstacles){o.x-=speed*dt;const playerX=164,playerW=126,feet=GROUND+jumpY;if(!o.hit&&invincible<=0&&playerX+playerW>o.x+8&&playerX<o.x+o.w-8&&feet>GROUND-o.h+9){o.hit=true;lives--;invincible=1.15;sparkle(o.x,GROUND-o.h,7);if(lives<=0){mode='over';show('이번 달리기는 여기까지!','점수 '+Math.floor(score)+' · 모은 별 '+stars+'개<br>다시 달려볼까요?','다시 시작')}}}
+      for(const s of pickups){s.x-=speed*dt;if(!s.got&&Math.abs(s.x-218)<67&&Math.abs(s.y-(GROUND-130+jumpY))<47){s.got=true;stars++;score+=40;sparkle(s.x,s.y,12)}}
+      obstacles=obstacles.filter(o=>o.x>-100);pickups=pickups.filter(s=>s.x>-40&&!s.got);
+      for(const p of particles){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=500*dt}particles=particles.filter(p=>p.life>0);hud();
+    }
+    function cloud(x,y,s){ctx.fillStyle='#fffaf3b8';for(const [a,b,r] of [[0,0,28],[30,-12,34],[67,0,27]]){ctx.beginPath();ctx.arc(x+a*s,y+b*s,r*s,0,Math.PI*2);ctx.fill()}}
+    function star(x,y,r,color='#ffe38b'){ctx.fillStyle=color;ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rad=i%2?r*.44:r;ctx.lineTo(x+Math.cos(a)*rad,y+Math.sin(a)*rad)}ctx.closePath();ctx.fill()}
+    function background(){
+      const sky=ctx.createLinearGradient(0,0,0,GROUND);sky.addColorStop(0,'#b7d9f0');sky.addColorStop(.67,'#fce4d8');sky.addColorStop(1,'#f7d9cb');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+      ctx.fillStyle='#fff3d9';ctx.beginPath();ctx.arc(790,108,47,0,Math.PI*2);ctx.fill();
+      for(let i=0;i<5;i++)cloud(((i*280-travel*.07)%(W+400)+W+400)%(W+400)-160,80+(i%3)*58,.7+(i%2)*.25);
+      ctx.fillStyle='#c5b9d5';ctx.beginPath();ctx.moveTo(0,336);for(let x=0;x<=W;x+=20)ctx.lineTo(x,310+Math.sin(x*.012+travel*.0004)*25);ctx.lineTo(W,GROUND);ctx.lineTo(0,GROUND);ctx.fill();
+      ctx.fillStyle='#819d91';for(let i=0;i<11;i++){let x=((i*133-travel*.22)%(W+180)+W+180)%(W+180)-80;ctx.fillRect(x,300,9,126);ctx.beginPath();ctx.arc(x+5,296,34+(i%3)*6,0,Math.PI*2);ctx.fill()}
+      ctx.fillStyle='#dcbca7';ctx.fillRect(0,GROUND,W,H-GROUND);ctx.fillStyle='#f3dbc3';ctx.fillRect(0,GROUND,W,12);ctx.fillStyle='#b59083';for(let i=0;i<16;i++){let x=((i*87-travel*.8)%(W+90)+W+90)%(W+90)-30;ctx.fillRect(x,GROUND+41+(i%3)*17,21,3)}
+      ctx.fillStyle='#679475';for(let i=0;i<20;i++){let x=((i*71-travel*.85)%(W+80)+W+80)%(W+80)-20;ctx.beginPath();ctx.ellipse(x,GROUND+6,13,4,0,0,Math.PI*2);ctx.fill()}
+    }
+    function draw(){
+      background();
+      for(const s of pickups){ctx.save();ctx.shadowColor='#fff3b2';ctx.shadowBlur=21;star(s.x,s.y+Math.sin(clock*7+s.x)*6,19);ctx.restore()}
+      for(const o of obstacles){ctx.fillStyle='#8d6b78';ctx.beginPath();ctx.roundRect(o.x,GROUND-o.h,o.w,o.h,10);ctx.fill();ctx.fillStyle='#bc98a1';ctx.beginPath();ctx.ellipse(o.x+o.w*.4,GROUND-o.h+13,o.w*.27,7,-.3,0,Math.PI*2);ctx.fill()}
+      const frame=mode==='ready'?0:Math.floor(clock*FPS)%FRAME_COUNT;
+      if(sprite.complete&&sprite.naturalWidth>=FRAME*FRAME_COUNT){ctx.save();if(invincible>0&&Math.floor(clock*14)%2===0)ctx.globalAlpha=.45;ctx.drawImage(sprite,frame*FRAME,0,FRAME,FRAME,96,GROUND-240+jumpY,280,280);ctx.restore()}else{ctx.fillStyle='#594567';ctx.font='bold 24px system-ui';ctx.fillText('이미지 로딩 중…',105,GROUND-85)}
+      for(const p of particles){ctx.globalAlpha=Math.max(0,p.life/p.max);star(p.x,p.y,p.r,'#ffe7a1')}ctx.globalAlpha=1;
+      if(mode==='playing'&&jumpY===0){ctx.fillStyle='#fff5db80';ctx.beginPath();ctx.ellipse(225,GROUND+8,90,7,0,0,Math.PI*2);ctx.fill()}
+    }
+    function loop(t){const dt=Math.min(.033,(t-last)/1000||0);last=t;if(mode==='playing')update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+  })();
+  </script>
+</body>
+</html>

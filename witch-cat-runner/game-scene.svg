@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#b7d9f0"/><stop offset=".68" stop-color="#fce4d8"/><stop offset="1" stop-color="#f7d9cb"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="8"/></filter>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <circle cx="790" cy="107" r="47" fill="#fff3d9"/>
+  <g fill="#fffaf3" opacity=".75"><circle cx="77" cy="103" r="27"/><circle cx="111" cy="92" r="35"/><circle cx="148" cy="105" r="26"/><circle cx="558" cy="80" r="25"/><circle cx="589" cy="67" r="32"/><circle cx="623" cy="83" r="24"/></g>
+  <path d="M0 334 Q80 280 160 327T320 329T480 310T640 326T800 307T960 330V427H0Z" fill="#c5b9d5"/>
+  <g fill="#819d91"><path d="M25 303h9v124h-9zm110-18h9v142h-9zm130 15h9v127h-9zm130-18h9v145h-9zm130 19h9v126h-9zm130-17h9v143h-9zm130 15h9v128h-9zm130-12h9v140h-9z"/><circle cx="30" cy="301" r="36"/><circle cx="140" cy="282" r="40"/><circle cx="270" cy="298" r="34"/><circle cx="400" cy="281" r="40"/><circle cx="530" cy="299" r="35"/><circle cx="660" cy="283" r="39"/><circle cx="790" cy="298" r="35"/><circle cx="920" cy="285" r="40"/></g>
+  <rect y="427" width="960" height="113" fill="#dcbca7"/><rect y="427" width="960" height="12" fill="#f3dbc3"/>
+  <path d="M0 467h24m73 14h27m75-7h24m79 19h22m89-15h24m80 13h25m78-22h22m82 15h25m80-11h22m81 20h24" stroke="#b59083" stroke-width="3"/>
+  <g fill="#fff0a5" filter="url(#glow)"><circle cx="523" cy="231" r="21"/><circle cx="855" cy="283" r="21"/></g>
+  <g fill="#ffe38b"><path d="m523 207 6 17 17 6-17 6-6 17-6-17-17-6 17-6z"/><path d="m855 260 6 17 17 6-17 6-6 17-6-17-17-6 17-6z"/></g>
+  <rect x="689" y="373" width="56" height="54" rx="10" fill="#8d6b78"/><ellipse cx="713" cy="387" rx="17" ry="7" fill="#bc98a1"/>
+  <svg x="96" y="152" width="280" height="280" viewBox="1280 0 640 640"><image href="assets/sprite-sheet-alpha.png" width="3840" height="640"/></svg>
+  <rect x="22" y="18" width="360" height="57" rx="20" fill="#fffaf0" opacity=".94"/><text x="42" y="55" font-family="Malgun Gothic, sans-serif" font-size="25" font-weight="700" fill="#42364d">✦ 소녀마법사랑 별빛 달리기</text>
+  <text x="726" y="53" font-family="Malgun Gothic, sans-serif" font-size="21" font-weight="700" fill="#42364d">점수 120 · 별 3개</text>
+</svg>
