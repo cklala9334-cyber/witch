@@ -38,6 +38,12 @@
     .overlay.intro p{grid-column:1;margin:0;font-size:13px;line-height:1.5;max-width:none}
     .overlay.intro #start{grid-column:2;grid-row:1/3;justify-self:end;white-space:nowrap}
     @media(max-width:700px){.overlay.intro{position:relative;inset:auto;padding:14px}.overlay.intro .card{grid-template-columns:1fr}.overlay.intro h1,.overlay.intro p,.overlay.intro #start{grid-column:1;grid-row:auto}.overlay.intro p{margin:4px 0 12px}.overlay.intro #start{justify-self:end}.stage{min-height:0}}
+    .overlay.intro{padding:7px 10px;background:#20192d;border-top:0}
+    .overlay.intro .card{width:max-content;max-width:100%;margin-left:auto;display:flex;gap:10px;align-items:center}
+    .overlay.intro h1{font-family:system-ui,"Malgun Gothic",sans-serif;font-size:13px;letter-spacing:0;margin:0;white-space:nowrap}
+    .overlay.intro p{display:none}
+    .overlay.intro #start{min-width:0;padding:8px 12px;font-size:12px;border-radius:7px}
+    @media(max-width:700px){.overlay.intro{padding:6px 8px}.overlay.intro .card{display:flex;flex-wrap:wrap;justify-content:flex-end}.overlay.intro h1{font-size:12px}.overlay.intro #start{padding:7px 10px;font-size:12px}}
   </style>
 </head>
 <body>
