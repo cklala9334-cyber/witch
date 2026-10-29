@@ -30,6 +30,14 @@
     .overlay .btn:focus-visible{outline-color:#ffdcab}
     .control-main,.secondary{color:#f7ecf5}.small{background:#34283f;color:#fff2e5;border:1px solid #a78aa9}.control-main .small{background:#34283f}.control-main .boost{background:#69507b;color:#fff7df}.spells,.rules{background:#2a2136;color:#fff0e5;border-color:#806b87}.spell-options button{background:#382b46;color:#fff3e7;border-color:#685774}.spell-options button[aria-pressed="true"]{background:#5c3e72;border-color:#d6a8dc}.gifts{color:#f2d8e9}.records input{background:#31263d;color:#fff;border-color:#806b87}.progress{background:#493c50}
     @media(max-width:700px){.overlay{position:absolute;inset:0;justify-content:center;align-items:flex-end;background:linear-gradient(180deg,#1b142800 10%,#1b1428ba 47%,#1b1428f2 100%);padding:20px}.overlay .card{min-width:0;width:100%;max-width:420px}.overlay.intro .card::before{font-size:9px;margin-bottom:8px}.overlay h1{font-size:clamp(27px,7vw,40px);margin-bottom:8px}.overlay p{font-size:12px;line-height:1.5;margin-bottom:12px}.overlay .btn{font-size:14px;padding:11px 17px;min-width:150px}.stage{min-height:510px}.stage canvas{height:510px;width:100%;object-fit:cover;object-position:18% center}.top{padding:9px 5px}.title{font-size:18px}.meta{justify-content:flex-start}.pill{font-size:11px}.controls{font-size:12px}.control-main .small{background:#34283f}}
+    .overlay.intro{position:relative;inset:auto;display:block;background:#20192dbd;padding:16px 22px;border-top:1px solid #b697b166}
+    .overlay.intro[hidden]{display:none}
+    .overlay.intro .card{width:100%;max-width:none;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:22px;align-items:center}
+    .overlay.intro .card::before{display:none}
+    .overlay.intro h1{grid-column:1;font-size:clamp(18px,2.2vw,24px);margin:0 0 4px;line-height:1.25}
+    .overlay.intro p{grid-column:1;margin:0;font-size:13px;line-height:1.5;max-width:none}
+    .overlay.intro #start{grid-column:2;grid-row:1/3;justify-self:end;white-space:nowrap}
+    @media(max-width:700px){.overlay.intro{position:relative;inset:auto;padding:14px}.overlay.intro .card{grid-template-columns:1fr}.overlay.intro h1,.overlay.intro p,.overlay.intro #start{grid-column:1;grid-row:auto}.overlay.intro p{margin:4px 0 12px}.overlay.intro #start{justify-self:end}.stage{min-height:0}}
   </style>
 </head>
 <body>
